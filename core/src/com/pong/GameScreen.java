@@ -28,6 +28,7 @@ public class GameScreen extends ScreenAdapter
     // Game Objects
     private Player Player;
     private Ball Ball;
+    private Wall WallTop, WallBottom;
 
     public GameScreen(OrthographicCamera camera)
     {
@@ -40,16 +41,20 @@ public class GameScreen extends ScreenAdapter
 
         this.Player = new Player(16, Boot.INSTANCE.getScreenHeight() / 2, this);
         this.Ball = new Ball(this);
+        this.WallTop = new Wall(32, this);
+        this.WallBottom = new Wall(Boot.INSTANCE.getScreenHeight() - 32, this);
     }
 
     public void update()
     {
         // 1 / 60 = 60 FPS
         World.step(1 / 60f, 6, 2);
-        SpriteBatch.setProjectionMatrix(this.OrthographicCamera.combined);
 
+        this.OrthographicCamera.update();
         this.Player.update();
         this.Ball.update();
+
+        SpriteBatch.setProjectionMatrix(this.OrthographicCamera.combined);
 
         // SI la touche ECHAP est pressée
         if (Gdx.input.isKeyPressed(Input.Keys.ESCAPE))
@@ -79,8 +84,14 @@ public class GameScreen extends ScreenAdapter
 
         this.Player.render(this.SpriteBatch);
         this.Ball.render(this.SpriteBatch);
+        this.WallTop.render(SpriteBatch);
+        this.WallBottom.render(SpriteBatch);
 
         SpriteBatch.end();
+
+        // Permet de voir les boxs de nos objets
+        // Pour le debug
+        //this.Box2DDebugRenderer.render(this.World, this.OrthographicCamera.combined.scl(Const.PPM));
     }
 
     public World getWorld()
