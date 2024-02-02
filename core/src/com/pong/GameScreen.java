@@ -27,6 +27,7 @@ public class GameScreen extends ScreenAdapter
 
     // Game Objects
     private Player Player;
+    private Ball Ball;
 
     public GameScreen(OrthographicCamera camera)
     {
@@ -38,6 +39,7 @@ public class GameScreen extends ScreenAdapter
         this.Box2DDebugRenderer = new Box2DDebugRenderer();
 
         this.Player = new Player(16, Boot.INSTANCE.getScreenHeight() / 2, this);
+        this.Ball = new Ball(this);
     }
 
     public void update()
@@ -47,12 +49,19 @@ public class GameScreen extends ScreenAdapter
         SpriteBatch.setProjectionMatrix(this.OrthographicCamera.combined);
 
         this.Player.update();
+        this.Ball.update();
 
         // SI la touche ECHAP est pressée
         if (Gdx.input.isKeyPressed(Input.Keys.ESCAPE))
         {
             // Ferme le jeu
             Gdx.app.exit();
+        }
+
+        // Permet de réinitialiser la balle
+        if (Gdx.input.isKeyJustPressed(Input.Keys.R))
+        {
+            this.Ball.Reset();
         }
     }
 
@@ -69,7 +78,8 @@ public class GameScreen extends ScreenAdapter
         SpriteBatch.begin();
 
         this.Player.render(this.SpriteBatch);
-        
+        this.Ball.render(this.SpriteBatch);
+
         SpriteBatch.end();
     }
 

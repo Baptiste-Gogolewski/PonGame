@@ -22,6 +22,7 @@ public class Player extends PlayerPaddle
         if (Gdx.input.isKeyPressed(Input.Keys.S))
             this.VelY = -1;
         
+        
         // Définis la vélocité de notre body pour faire bouger le Paddle
         this.Body.setLinearVelocity(0, this.VelY * this.Speed);
 
