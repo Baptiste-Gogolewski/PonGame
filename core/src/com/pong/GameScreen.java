@@ -25,6 +25,9 @@ public class GameScreen extends ScreenAdapter
     // visualiser de manière graphique les éléments du monde physique gérés par Box2D
     private Box2DDebugRenderer Box2DDebugRenderer;
 
+    // Game Objects
+    private Player Player;
+
     public GameScreen(OrthographicCamera camera)
     {
         this.OrthographicCamera = camera;
@@ -33,6 +36,8 @@ public class GameScreen extends ScreenAdapter
         this.SpriteBatch = new SpriteBatch();
         this.World = new World(new Vector2(0, 0), false);
         this.Box2DDebugRenderer = new Box2DDebugRenderer();
+
+        this.Player = new Player(16, Boot.INSTANCE.getScreenHeight() / 2, this);
     }
 
     public void update()
@@ -40,6 +45,8 @@ public class GameScreen extends ScreenAdapter
         // 1 / 60 = 60 FPS
         World.step(1 / 60f, 6, 2);
         SpriteBatch.setProjectionMatrix(this.OrthographicCamera.combined);
+
+        this.Player.update();
 
         // SI la touche ECHAP est pressée
         if (Gdx.input.isKeyPressed(Input.Keys.ESCAPE))
@@ -61,8 +68,13 @@ public class GameScreen extends ScreenAdapter
         // Affiche les textures
         SpriteBatch.begin();
 
-
-
+        this.Player.render(this.SpriteBatch);
+        
         SpriteBatch.end();
+    }
+
+    public World getWorld()
+    {
+        return this.World;
     }
 }
