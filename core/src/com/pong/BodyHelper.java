@@ -16,6 +16,7 @@ public class BodyHelper
         BodyDef BodyDef = new BodyDef();
         BodyDef.type = ((isStatic == false) ? com.badlogic.gdx.physics.box2d.BodyDef.BodyType.DynamicBody : com.badlogic.gdx.physics.box2d.BodyDef.BodyType.StaticBody);
         BodyDef.position.set(x / Const.PPM, y / Const.PPM);
+        BodyDef.fixedRotation = true;   // Evite que notre body tourne sur lui meme
         Body Body = world.createBody(BodyDef);
 
         PolygonShape PolygonShape = new PolygonShape();

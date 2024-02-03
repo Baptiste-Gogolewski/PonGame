@@ -5,7 +5,9 @@ import com.badlogic.gdx.Input;
 import com.badlogic.gdx.ScreenAdapter;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.OrthographicCamera;
+import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
+import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.math.Vector3;
 import com.badlogic.gdx.physics.box2d.Box2DDebugRenderer;
@@ -25,10 +27,14 @@ public class GameScreen extends ScreenAdapter
     // visualiser de manière graphique les éléments du monde physique gérés par Box2D
     private Box2DDebugRenderer Box2DDebugRenderer;
 
+    private GameContactListener GameContactListener;
+    private TextureRegion Numbers[];
+
     // Game Objects
     private Player Player;
     private Ball Ball;
     private Wall WallTop, WallBottom;
+    private PlayerAI PlayerAI;
 
     public GameScreen(OrthographicCamera camera)
     {
@@ -39,10 +45,16 @@ public class GameScreen extends ScreenAdapter
         this.World = new World(new Vector2(0, 0), false);
         this.Box2DDebugRenderer = new Box2DDebugRenderer();
 
+        this.GameContactListener = new GameContactListener(this);
+        this.World.setContactListener(this.GameContactListener);
+
+        this.Numbers = LoadTextureSpriteNumbers("numbers.png", 10);
+
         this.Player = new Player(16, Boot.INSTANCE.getScreenHeight() / 2, this);
         this.Ball = new Ball(this);
         this.WallTop = new Wall(32, this);
         this.WallBottom = new Wall(Boot.INSTANCE.getScreenHeight() - 32, this);
+        this.PlayerAI = new PlayerAI(Boot.INSTANCE.getScreenWidth() - 16, Boot.INSTANCE.getScreenHeight() / 2, this);
     }
 
     public void update()
@@ -53,6 +65,7 @@ public class GameScreen extends ScreenAdapter
         this.OrthographicCamera.update();
         this.Player.update();
         this.Ball.update();
+        this.PlayerAI.update();;
 
         SpriteBatch.setProjectionMatrix(this.OrthographicCamera.combined);
 
@@ -67,6 +80,8 @@ public class GameScreen extends ScreenAdapter
         if (Gdx.input.isKeyJustPressed(Input.Keys.R))
         {
             this.Ball.Reset();
+            this.Player.setScore(0);
+            this.PlayerAI.setScore(0);
         }
     }
 
@@ -86,6 +101,10 @@ public class GameScreen extends ScreenAdapter
         this.Ball.render(this.SpriteBatch);
         this.WallTop.render(SpriteBatch);
         this.WallBottom.render(SpriteBatch);
+        this.PlayerAI.render(SpriteBatch);
+
+        this.DrawNumbers(SpriteBatch, this.Player.getScore(), 64, Boot.INSTANCE.getScreenHeight() - 55, 30, 42);
+        this.DrawNumbers(SpriteBatch, this.PlayerAI.getScore(), Boot.INSTANCE.getScreenWidth() - 96, Boot.INSTANCE.getScreenHeight() - 55, 30, 42);
 
         SpriteBatch.end();
 
@@ -94,8 +113,43 @@ public class GameScreen extends ScreenAdapter
         //this.Box2DDebugRenderer.render(this.World, this.OrthographicCamera.combined.scl(Const.PPM));
     }
 
+    // TextureRegion.split() retourne une liste en 2 dimension. Notre Texture a une dimension donc on rajoute [0]
+    private TextureRegion[] LoadTextureSpriteNumbers(String filename, int colums)
+    {
+        Texture Texture = new Texture(filename);
+        return TextureRegion.split(Texture, Texture.getWidth() / colums, Texture.getHeight())[0];
+    }
+
+    private void DrawNumbers(SpriteBatch spriteBatch, int number, float x, float y, float width, float height)
+    {
+        if (number < 10)
+        {
+            spriteBatch.draw(this.Numbers[number], x, y, width, height);
+        }
+        else
+        {
+            spriteBatch.draw(this.Numbers[Integer.parseInt(("" + number).substring(0, 1))], x, y, width, height);
+            spriteBatch.draw(this.Numbers[Integer.parseInt(("" + number).substring(1, 2))], x + 20, y, width, height);
+        }
+    }
+
     public World getWorld()
     {
         return this.World;
+    }
+
+    public Ball getBall()
+    {
+        return this.Ball;
+    }
+
+    public Player getPlayer()
+    {
+        return this.Player;
+    }
+
+    public PlayerAI getPlayerAI()
+    {
+        return this.PlayerAI;
     }
 }

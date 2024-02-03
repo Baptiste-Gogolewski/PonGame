@@ -9,7 +9,6 @@ public class Player extends PlayerPaddle
     public Player(float x, float y, GameScreen gameScreen)
     {
         super(x, y, gameScreen);
-        //TODO Auto-generated constructor stub
     }
 
     public void update()

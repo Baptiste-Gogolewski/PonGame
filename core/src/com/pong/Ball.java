@@ -42,7 +42,17 @@ public class Ball
         this.Body.setLinearVelocity(this.VelX * this.Speed, this.VelY * this.Speed);
 
         // Score
+        if (this.x < 0)
+        {
+            this.GameScreen.getPlayerAI().Score();
+            this.Reset();
+        }
 
+        if (this.x > Boot.INSTANCE.getScreenWidth())
+        {
+            this.GameScreen.getPlayer().Score();
+            this.Reset();
+        }
     }
 
     public void render(SpriteBatch spriteBatch)
@@ -56,5 +66,25 @@ public class Ball
         this.VelY = this.getRandowDirection();
         this.Speed = 5;
         this.Body.setTransform(Boot.INSTANCE.getScreenWidth() / 2 / Const.PPM,Boot.INSTANCE.getScreenHeight() / 2 / Const.PPM, 0);
+    }
+
+    public float getY()
+    {
+        return this.y;
+    }
+
+    public void ReverseVelX()
+    {
+        this.VelX *= -1;
+    }
+
+    public void ReverseVelY()
+    {
+        this.VelY *= -1;
+    }
+
+    public void IncSpeed()
+    {
+        this.Speed *= 1.1f;
     }
 }

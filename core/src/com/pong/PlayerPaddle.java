@@ -12,7 +12,7 @@ public abstract class PlayerPaddle
     protected Body Body;
 
     protected float x, y, Speed, VelY;
-    protected int Width, Height, score;
+    protected int Width, Height, Score;
     protected Texture Texture;
     protected GameScreen GameScreen;
 
@@ -27,7 +27,7 @@ public abstract class PlayerPaddle
         this.Texture = new Texture("white.png");
         this.Body = BodyHelper.CreateBody(this.x, this.y, this.Width, this.Height, false, 10000, this.GameScreen.getWorld(), ContactType.PLAYER);
         this.VelY = 0;
-        this.score = 0;
+        this.Score = 0;
     }
 
     // Permet de bouger le body dans notre jeu et de définir x, y
@@ -43,5 +43,20 @@ public abstract class PlayerPaddle
     public void render(SpriteBatch spriteBatch)
     {
         spriteBatch.draw(this.Texture, this.x, this.y, this.Width, this.Height);
+    }
+
+    public void Score()
+    {
+        this.Score++;
+    }
+
+    public void setScore(int score)
+    {
+        this.Score = score;
+    }
+
+    public int getScore()
+    {
+        return this.Score;
     }
 }
