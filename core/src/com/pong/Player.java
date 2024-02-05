@@ -2,7 +2,6 @@ package com.pong;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
-import com.pong.GameScreen;
 
 public class Player extends PlayerPaddle
 {

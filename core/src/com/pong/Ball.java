@@ -19,7 +19,7 @@ public class Ball
         this.y = Boot.INSTANCE.getScreenHeight() / 2;
 
         this.Speed = 5;
-        this.Texture = new Texture("white.png");
+        this.Texture = new Texture("ColorPaddleWall.png");
         this.GameScreen = gameScreen;
         this.Width = 32;
         this.Height = 32;

@@ -18,7 +18,7 @@ public class Wall
         this.Width = Boot.INSTANCE.getScreenWidth();
         this.Height = 64;
 
-        this.Texture = new Texture("white.png");
+        this.Texture = new Texture("ColorPaddleWall.png");
         this.Body = BodyHelper.CreateBody(this.x, this.y, this.Width, this.Height, true, 0, gameScreen.getWorld(), ContactType.WALL);
     }
 

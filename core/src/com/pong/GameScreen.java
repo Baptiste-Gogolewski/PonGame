@@ -3,6 +3,7 @@ package com.pong;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
 import com.badlogic.gdx.ScreenAdapter;
+import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.Texture;
@@ -30,6 +31,9 @@ public class GameScreen extends ScreenAdapter
     private GameContactListener GameContactListener;
     private TextureRegion Numbers[];
 
+    // Color
+    private Color BackgroundColor;
+
     // Game Objects
     private Player Player;
     private Ball Ball;
@@ -49,6 +53,10 @@ public class GameScreen extends ScreenAdapter
         this.World.setContactListener(this.GameContactListener);
 
         this.Numbers = LoadTextureSpriteNumbers("numbers.png", 10);
+
+        // Color
+        // this.BackgroundColor = hexToColor("#242234");
+        this.BackgroundColor = new Color(0.98f, 0.79f, 0.72f, 1);
 
         this.Player = new Player(16, Boot.INSTANCE.getScreenHeight() / 2, this);
         this.Ball = new Ball(this);
@@ -91,7 +99,7 @@ public class GameScreen extends ScreenAdapter
         update();
 
         // Efface l'écran avec la couleur spécifiée.
-        Gdx.gl.glClearColor(0, 0, 0, 1);
+        Gdx.gl.glClearColor(this.BackgroundColor.r, this.BackgroundColor.g, this.BackgroundColor.b, this.BackgroundColor.a);
         Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
 
         // Affiche les textures
@@ -131,6 +139,28 @@ public class GameScreen extends ScreenAdapter
             spriteBatch.draw(this.Numbers[Integer.parseInt(("" + number).substring(0, 1))], x, y, width, height);
             spriteBatch.draw(this.Numbers[Integer.parseInt(("" + number).substring(1, 2))], x + 20, y, width, height);
         }
+    }
+
+    // Cette fonction permet de convertir 
+    private Color hexToColor(String hex) {
+        Color color = new Color();
+
+        // Supprimer le préfixe "#" si présent
+        if (hex.startsWith("#")) {
+            hex = hex.substring(1);
+        }
+
+        // Convertir la valeur hexadécimale en entier
+        int intValue = Integer.parseInt(hex, 16);
+
+        // Extraire les composantes de couleur
+        int red = (intValue >> 16) & 0xFF;
+        int green = (intValue >> 8) & 0xFF;
+        int blue = intValue & 0xFF;
+
+        // Définir la couleur avec les composantes RGB
+        color.set(red / 255f, green / 255f, blue / 255f, 1f); // Alpha à 1 par défaut
+        return color;
     }
 
     public World getWorld()
