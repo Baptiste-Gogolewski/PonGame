@@ -22,7 +22,7 @@ public abstract class PlayerPaddle
         this.Speed = 6;
         this.Width = 16;
         this.Height = 64;
-        this.Texture = new Texture("ColorPaddleWall.png");
+        this.Texture = new Texture(Const.Color);
         this.Body = BodyHelper.CreateBody(this.x, this.y, this.Width, this.Height, false, 10000, this.GameScreen.getWorld(), ContactType.PLAYER);
         this.VelY = 0;
         this.Score = 0;

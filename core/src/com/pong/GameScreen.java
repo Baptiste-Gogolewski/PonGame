@@ -55,14 +55,13 @@ public class GameScreen extends ScreenAdapter
         this.Numbers = LoadTextureSpriteNumbers("numbers.png", 10);
 
         // Color
-        // this.BackgroundColor = hexToColor("#242234");
-        this.BackgroundColor = new Color(0.98f, 0.79f, 0.72f, 1);
+        this.BackgroundColor = ToColor(41, 128, 185, 1);
 
-        this.Player = new Player(16, Boot.INSTANCE.getScreenHeight() / 2, this);
+        this.Player = new Player(32, Boot.INSTANCE.getScreenHeight() / 2, this);
         this.Ball = new Ball(this);
         this.WallTop = new Wall(32, this);
         this.WallBottom = new Wall(Boot.INSTANCE.getScreenHeight() - 32, this);
-        this.PlayerAI = new PlayerAI(Boot.INSTANCE.getScreenWidth() - 16, Boot.INSTANCE.getScreenHeight() / 2, this);
+        this.PlayerAI = new PlayerAI(Boot.INSTANCE.getScreenWidth() - 32, Boot.INSTANCE.getScreenHeight() / 2, this);
     }
 
     public void update()
@@ -142,25 +141,30 @@ public class GameScreen extends ScreenAdapter
     }
 
     // Cette fonction permet de convertir 
-    private Color hexToColor(String hex) {
-        Color color = new Color();
+    // private Color hexToColor(String hex) {
+    //     Color color = new Color();
 
-        // Supprimer le préfixe "#" si présent
-        if (hex.startsWith("#")) {
-            hex = hex.substring(1);
-        }
+    //     // Supprimer le préfixe "#" si présent
+    //     if (hex.startsWith("#")) {
+    //         hex = hex.substring(1);
+    //     }
 
-        // Convertir la valeur hexadécimale en entier
-        int intValue = Integer.parseInt(hex, 16);
+    //     // Convertir la valeur hexadécimale en entier
+    //     int intValue = Integer.parseInt(hex, 16);
 
-        // Extraire les composantes de couleur
-        int red = (intValue >> 16) & 0xFF;
-        int green = (intValue >> 8) & 0xFF;
-        int blue = intValue & 0xFF;
+    //     // Extraire les composantes de couleur
+    //     int red = (intValue >> 16) & 0xFF;
+    //     int green = (intValue >> 8) & 0xFF;
+    //     int blue = intValue & 0xFF;
 
-        // Définir la couleur avec les composantes RGB
-        color.set(red / 255f, green / 255f, blue / 255f, 1f); // Alpha à 1 par défaut
-        return color;
+    //     // Définir la couleur avec les composantes RGB
+    //     color.set(red / 255f, green / 255f, blue / 255f, 1f); // Alpha à 1 par défaut
+    //     return color;
+    // }
+
+    private Color ToColor(int r, int g, int b, int a)
+    {
+        return new Color(r / 255f, g / 255f, b / 255f, a);
     }
 
     public World getWorld()
