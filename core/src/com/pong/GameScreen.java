@@ -14,6 +14,9 @@ import com.badlogic.gdx.math.Vector3;
 import com.badlogic.gdx.physics.box2d.Box2DDebugRenderer;
 import com.badlogic.gdx.physics.box2d.World;
 
+import box2dLight.PointLight;
+import box2dLight.RayHandler;
+
 public class GameScreen extends ScreenAdapter
 {
     private OrthographicCamera OrthographicCamera;
@@ -32,7 +35,11 @@ public class GameScreen extends ScreenAdapter
     private TextureRegion Numbers[];
 
     // Color
-    private Color BackgroundColor;
+    // private Color BackgroundColor;
+
+    // Light
+    // private RayHandler RayHandler;
+    // private PointLight MyPointLight;
 
     // Game Objects
     private Player Player;
@@ -55,8 +62,20 @@ public class GameScreen extends ScreenAdapter
         this.Numbers = LoadTextureSpriteNumbers("numbers.png", 10);
 
         // Color
-        this.BackgroundColor = ToColor(41, 128, 185, 1);
+        // this.BackgroundColor = ToColor(41, 128, 185, 1);
 
+        // Light
+        // this.RayHandler = new RayHandler(this.World);
+        // this.RayHandler.setAmbientLight(.5f);
+        // /*
+        //  * 32 / Const.PPM pour avoir une distance en pixel
+        //  * 32 pour avoir une distance en metres 
+        // */
+        // this.MyPointLight = new PointLight(this.RayHandler, 200, Color.WHITE, 32 / Const.PPM, 0, 0);
+        // this.MyPointLight.setSoftnessLength(0.2f);     // Permet d'avoir des ombres
+        // this.MyPointLight.setXray(false);
+
+        // Players
         this.Player = new Player(32, Boot.INSTANCE.getScreenHeight() / 2, this);
         this.Ball = new Ball(this);
         this.WallTop = new Wall(32, this);
@@ -67,12 +86,16 @@ public class GameScreen extends ScreenAdapter
     public void update()
     {
         // 1 / 60 = 60 FPS
-        World.step(1 / 60f, 6, 2);
+        this.World.step(1 / 60f, 6, 2);
+
+        // After World.step()
+        // Setup RayHandler
+        // this.RayHandler.update();
 
         this.OrthographicCamera.update();
         this.Player.update();
         this.Ball.update();
-        this.PlayerAI.update();;
+        this.PlayerAI.update();
 
         SpriteBatch.setProjectionMatrix(this.OrthographicCamera.combined);
 
@@ -98,7 +121,8 @@ public class GameScreen extends ScreenAdapter
         update();
 
         // Efface l'écran avec la couleur spécifiée.
-        Gdx.gl.glClearColor(this.BackgroundColor.r, this.BackgroundColor.g, this.BackgroundColor.b, this.BackgroundColor.a);
+        // Gdx.gl.glClearColor(this.BackgroundColor.r, this.BackgroundColor.g, this.BackgroundColor.b, this.BackgroundColor.a);
+        Gdx.gl.glClearColor(0, 0, 0, 1);
         Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
 
         // Affiche les textures
@@ -110,14 +134,27 @@ public class GameScreen extends ScreenAdapter
         this.WallBottom.render(SpriteBatch);
         this.PlayerAI.render(SpriteBatch);
 
+        // Bug concernant l'affichage des chiffres
         this.DrawNumbers(SpriteBatch, this.Player.getScore(), 64, Boot.INSTANCE.getScreenHeight() - 55, 30, 42);
         this.DrawNumbers(SpriteBatch, this.PlayerAI.getScore(), Boot.INSTANCE.getScreenWidth() - 96, Boot.INSTANCE.getScreenHeight() - 55, 30, 42);
+
+        // La place de RayHandler.render() affecte les elements.
+        // Si je le mets avant Box2DDebugRenderer.render() alors on voit un ecran noir avec les formes géometriques sinon on voit un écran noir (placé après),
+        // alors on voit le reste.
+        // this.RayHandler.render();
 
         SpriteBatch.end();
 
         // Permet de voir les boxs de nos objets
         // Pour le debug
-        //this.Box2DDebugRenderer.render(this.World, this.OrthographicCamera.combined.scl(Const.PPM));
+        this.Box2DDebugRenderer.render(this.World, this.OrthographicCamera.combined.scl(Const.PPM));
+    }
+
+    @Override
+    public void dispose()
+    {
+        // Efface
+        // this.RayHandler.dispose();
     }
 
     // TextureRegion.split() retourne une liste en 2 dimension. Notre Texture a une dimension donc on rajoute [0]

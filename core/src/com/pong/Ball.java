@@ -87,4 +87,9 @@ public class Ball
     {
         this.Speed *= 1.1f;
     }
+
+    public Body getBody()
+    {
+        return this.Body;
+    }
 }
